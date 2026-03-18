@@ -49,7 +49,7 @@ async function start() {
   try {
     verifyMailer()
       .then(() => {
-        console.log("-> Mailer connected to Gmail");
+        console.log("-> All Connected...");
       })
       .catch((err) => {
         console.warn("-> Mailer connection warning:", err.message);
