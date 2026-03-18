@@ -20,13 +20,15 @@ app.use(
   }),
 );
 
-app.get("health", (_req, res) => {
+app.get("/health", (_req, res) => {
+  // ← must be before 404
   res.json({ status: "ok", ts: new Date().toISOString() });
 });
 
 app.use("/api/contact", contactRouter);
 
 app.use((_req, res) => {
+  // ← 404 must be last
   res.status(404).json({ success: false, error: "Not found" });
 });
 
