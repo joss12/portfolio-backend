@@ -45,12 +45,21 @@ app.use(
 
 async function start() {
   try {
-    await verifyMailer();
+    verifyMailer()
+      .then(() => {
+        console.log("-> Mailer connected to Gmail");
+      })
+      .catch((err) => {
+        console.warn("-> Mailer connection warning:", err.message);
+      });
+
     app.listen(config.port, () => {
-      console.log(`Server running on port ${config.port} [${config.nodeEnv}]`);
+      console.log(
+        `-> Server running on port ${config.port} [${config.nodeEnv}]`,
+      );
     });
   } catch (err) {
-    console.error("Failed to start server:", err);
+    console.error("-> Failed to start server:", err);
     process.exit(1);
   }
 }
