@@ -1,0 +1,15 @@
+services:
+  portfolio-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: portfolio-backend
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    ports:
+      - "127.0.0.1:8086:8086"
