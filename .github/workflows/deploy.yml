@@ -1,0 +1,37 @@
+script: |
+  set -e
+
+  cd ${{ secrets.EC2_APP_PATH }}
+
+  git pull origin main
+
+  docker compose build
+
+  docker compose up -d
+
+  echo "Waiting for container to become healthy..."
+
+  for i in {1..12}; do
+    STATUS=$(docker inspect \
+      --format='{{.State.Health.Status}}' \
+      portfolio-backend)
+
+    echo "Status: $STATUS"
+
+    if [ "$STATUS" = "healthy" ]; then
+      echo "Deployment successful!"
+      exit 0
+    fi
+
+    if [ "$STATUS" = "unhealthy" ]; then
+      echo "Container became unhealthy."
+      docker logs --tail 100 portfolio-backend
+      exit 1
+    fi
+
+    sleep 5
+  done
+
+  echo "Timed out waiting for healthy container."
+  docker logs --tail 100 portfolio-backend
+  exit 1
